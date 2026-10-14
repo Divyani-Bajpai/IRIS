@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 build/
 *.db
 *.exe
 *.o
 *.obj
+=======
+*.exe
+*.o
+build/
+*.db
+.vscode/
+>>>>>>> Rule---Engine
