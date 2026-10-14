@@ -3,3 +3,5 @@
 *.db
 build/
 .vscode/
+src/shell.c
+src/sqlite3ext.h
