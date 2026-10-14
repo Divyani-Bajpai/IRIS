@@ -1,6 +1,5 @@
-build/
-*.db
 *.exe
 *.o
-*.obj
+*.db
+build/
 .vscode/
