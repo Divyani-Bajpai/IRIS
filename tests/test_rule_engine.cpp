@@ -26,7 +26,8 @@ int main() {
 
     // Give Calculation Score to Rule Engine
     MetricScores scores = {
-        pageFaultsZ, ramZ, cpuZ, diskQueueZ, diskTimeZ
+        pageFaultsZ, ramZ, cpuZ, diskQueueZ, diskTimeZ,
+        true, true, true, true, true   // all five metrics are valid
     };
     
     RuleResult result = evaluateRules(scores);

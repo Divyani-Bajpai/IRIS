@@ -1,35 +1,47 @@
 #include <cmath>
 #include "rule_engine.h"
 
-RuleResult evaluateRules(MetricScores scores) {
-    
+using namespace std;
+
+RuleResult evaluateRules(MetricScores scores)
+{
     RuleResult result;
 
-    result.matched = false;
-    result.diagnosis = "No matching Rule";
-    result.reason = "No rule conditions matched";
-
-    // Check for the Scores
-    if(!isfinite(scores.pageFaultZ) || !isfinite(scores.availableRamZ) || !isfinite(scores.cpuZ)  || !isfinite(scores.diskQueueZ) || !isfinite(scores.diskTimeZ)) {
-        result.diagnosis = "Invalid metrics Score";
-        result.reason = "Some Scores are not Valid.";
-        return result;
-    }
-
-    // Defining Rules :-> Rule 1 : Memory Thrashing
-    if(scores.pageFaultZ > 2 && scores.availableRamZ < -2 && scores.cpuZ >= -1 && scores.cpuZ <= 1) {
+    if (scores.pageFaultsValid &&
+        scores.availableRamValid &&
+        scores.cpuValid &&
+        isfinite(scores.pageFaultsZ) &&
+        isfinite(scores.availableRamZ) &&
+        isfinite(scores.cpuZ) &&
+        scores.pageFaultsZ > 2.0 &&
+        scores.availableRamZ < -2.0 &&
+        scores.cpuZ >= -1.0 &&
+        scores.cpuZ <= 1.0)
+    {
         result.matched = true;
-        result.diagnosis = "Possible Memory Thrasing";
-        result.reason = "High Page Fault And Low Available RAM";
+        result.ruleName = RULE_MEMORY_THRASHING;
+        result.diagnosis = "Possible Memory Thrashing";
+        result.reason = "High page faults and low available RAM";
         return result;
     }
 
-    // Rule 2 : Disk I/O Contention
-    if(scores.diskQueueZ > 2 && scores.diskTimeZ > 2 && scores.availableRamZ >= -1 && scores.availableRamZ <= 1) {
+    if (scores.diskQueueValid &&
+        scores.diskTimeValid &&
+        scores.availableRamValid &&
+        isfinite(scores.diskQueueZ) &&
+        isfinite(scores.diskTimeZ) &&
+        isfinite(scores.availableRamZ) &&
+        scores.diskQueueZ > 2.0 &&
+        scores.diskTimeZ > 2.0 &&
+        scores.availableRamZ >= -1.0 &&
+        scores.availableRamZ <= 1.0)
+    {
         result.matched = true;
-        result.diagnosis = "Possible Disk I/O Contenstion";
-        result.reason = "Disk Queue and disk activity are high while RAM is near Baseline";
+        result.ruleName = RULE_DISK_IO_CONTENTION;
+        result.diagnosis = "Possible Disk I/O Contention";
+        result.reason = "High disk queue and disk activity";
         return result;
     }
+
     return result;
 }
