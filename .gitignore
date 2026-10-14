@@ -1,7 +1,23 @@
-*.exe
-*.o
-*.db
+# Build output
 build/
+out/
+cmake-build-*/
+*.obj
+*.o
+*.exe
+*.dll
+*.pdb
+*.ilk
+
+# Local SQLite database and journals
+iris.db
+iris.db-shm
+iris.db-wal
+
+# IDE files
+.vs/
 .vscode/
+.idea/
+
 src/shell.c
 src/sqlite3ext.h
