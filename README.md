@@ -23,7 +23,7 @@ When a computer becomes slow, it can be difficult to identify the actual reason.
 
 **Team Name:** Team Elite  
 **Project ID:** OSDBMS-V-2026-T014  
-**Institution:** Graphic Era (Deemed to be University), Dehradun  
+**Institution:** Graphic Era Deemed to be University, Dehradun  
 **Academic Session:** 2026–27
 
 ## Technologies and Tools Used
