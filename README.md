@@ -62,7 +62,6 @@ When a computer becomes slow, it can be difficult to identify the actual reason.
 ### 5. Startup Analysis
 
 - Identifies startup applications using Windows system information.
-- Records approximate boot-time information.
 
 ### 6. User Interface
 
@@ -79,58 +78,69 @@ The intended workflow of IRIS is:
 
 IRIS is designed for Windows because it uses Windows-specific APIs.
 
-### Prerequisites
+## Prerequisites
 
-- Windows operating system
-- Visual Studio Code
-- A compatible C++ compiler and build tools
-- SQLite library and headers required by the project
-- Git
+- Windows
+- Git for Windows
+- MSYS2 with the MINGW64 environment
+- Visual Studio Code (optional)
 
-### Getting the Project
+In the MSYS2 MINGW64 terminal, install the required packages:
+
+```bash
+pacman -S --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-sqlite3 mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+```
+
+## Get, build, and run IRIS
 
 Clone the repository:
 
 ```bash
 git clone https://github.com/Divyani-Bajpai/IRIS.git
+cd IRIS
 ```
 
-Open the project folder in Visual Studio Code.
+Build the project in the MSYS2 MINGW64 terminal:
 
-**Note:** The exact compiler, build system, dependency configuration, and build commands have not yet been confirmed. The verified build instructions will be added once the project configuration is finalized.
+```bash
+cmake -S . -B build -G Ninja
+cmake --build build
+```
 
-## Current Project Status
+Run the included tests:
 
-### Completed or Developed
+```bash
+ctest --test-dir build --output-on-failure
+```
 
-- SQLite connectivity and local data-storage foundation
-- Default baseline for initial diagnosis
-- Startup application enumeration
-- Approximate boot-time logging
-- CPU and memory monitoring module
-- Disk and process monitoring module
-- Initial UI structure
-- Initial testing of UI/data flow using dummy data
+Start IRIS:
 
-### Work in Progress
+```bash
+./build/iris_monitor.exe ./iris.db
+```
 
-- Integration of all modules through a common data flow
-- Machine-specific baseline generation using historical data
-- Connection of the UI to live system data
-- Completion and validation of diagnostic rules
-- Correlation of multiple metrics for root-cause identification
-- End-to-end testing and performance evaluation
+IRIS opens its report in a browser at `http://127.0.0.1:8765` or the next available local port. Click **Start 60-second check** to collect readings. Keep the terminal open while using the report. Press Ctrl+C in the terminal to close IRIS.
 
-The features listed above reflect the reported project progress. Their current implementation and working status must be verified against the source code.
+## Current project status
 
-## Future Work
+The project includes:
 
-- Complete integration of all modules.
-- Improve root-cause identification through metric correlation.
-- Validate diagnostic rules under normal and slow-performance conditions.
-- Connect the UI to live performance data.
-- Improve the reliability of baseline generation and recommendations.
-- Perform end-to-end testing and performance evaluation.
+- CPU, memory, disk, and process collectors
+- Local SQLite storage for readings, baselines, startup apps, and diagnoses
+- Starting baseline estimates and machine-specific baselines learned from saved history
+- Two diagnosis rules: possible memory thrashing and possible disk I/O contention
+- A local browser dashboard with live collection details and suggested next steps
+- Tests for CPU calculations, SQLite storage, diagnosis rules, and process collection
+
+Learned baselines require at least seven days of history and 500 eligible readings per metric. Until then, IRIS uses provisional starting estimates. The baseline stays fixed during each check.
+
+IRIS records startup applications from Windows Registry Run entries. It does **not** measure Windows boot duration. Per-process I/O readings can include cached I/O, and Windows may prevent access to some protected processes.
+
+## Future work
+
+- Add and validate more diagnosis rules.
+- Evaluate the recommendations using more real-world PC conditions.
+- Expand tests for complete collection and reporting.
 
 ## Repository
 
